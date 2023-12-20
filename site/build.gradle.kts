@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kobweb.application)
     alias(libs.plugins.kotlin.serialization)
-    // alias(libs.plugins.kobwebx.markdown)
 }
 
 group = "br.com.mdr.blogmultiplatform"
@@ -26,6 +25,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
+                implementation(libs.kotlin.serialization)
             }
         }
 

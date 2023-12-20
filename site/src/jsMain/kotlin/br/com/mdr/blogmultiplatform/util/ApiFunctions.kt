@@ -10,12 +10,30 @@ import kotlinx.serialization.json.Json
 
 suspend fun checkUserExistence(user: User): UserResponse? {
     return try {
-        val result = window.api.tryPost(
-            apiPath = CHECK_USER_API_PATH,
-            body = Json.encodeToString(user).encodeToByteArray())
-        Json.decodeFromString<UserResponse>(result.toString())
+        window.api.tryPost(
+            apiPath = "usercheck",
+            body = Json.encodeToString(user).encodeToByteArray()
+        )?.decodeToString().parseData()
     } catch (e: Exception) {
+        println("CURRENT_USER")
         println(e.message)
         null
     }
+}
+
+suspend fun checkUserId(id: String): Boolean {
+    return try {
+        window.api.tryPost(
+            apiPath = "checkuserid",
+            body = Json.encodeToString(id).encodeToByteArray()
+        )?.decodeToString().parseData()
+    } catch (e: Exception) {
+        println("USER_ID")
+        println(e.message)
+        false
+    }
+}
+
+inline fun <reified T> String?.parseData(): T {
+    return Json.decodeFromString(this.toString())
 }

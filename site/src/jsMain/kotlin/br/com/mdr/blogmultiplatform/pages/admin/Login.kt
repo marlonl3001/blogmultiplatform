@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import br.com.mdr.blogmultiplatform.models.Theme
 import br.com.mdr.blogmultiplatform.models.User
 import br.com.mdr.blogmultiplatform.models.UserResponse
+import br.com.mdr.blogmultiplatform.navigation.Screen
 import br.com.mdr.blogmultiplatform.styles.LoginInputStyle
 import br.com.mdr.blogmultiplatform.util.Constants.FONT_FAMILY
 import br.com.mdr.blogmultiplatform.util.Constants.LOGIN_INPUT_HEIGHT
@@ -161,7 +162,7 @@ fun LoginScreen() {
                                         remember = true,
                                         response = user
                                     )
-                                    context.router.navigateTo("/admin/")
+                                    context.router.navigateTo(Screen.Home.route)
                                 } else {
                                     errorText = "User not found!"
                                     delay(3000)

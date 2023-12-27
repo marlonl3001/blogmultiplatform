@@ -2,30 +2,27 @@ package br.com.mdr.blogmultiplatform.pages.admin
 
 import androidx.compose.runtime.Composable
 import br.com.mdr.blogmultiplatform.components.SidePanel
-import br.com.mdr.blogmultiplatform.util.Constants.PAGE_WIDTH
+import br.com.mdr.blogmultiplatform.util.Constants
 import br.com.mdr.blogmultiplatform.util.isUserLoggedIn
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.core.Page
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.dom.Text
 
 @Page
 @Composable
-fun HomePage() {
+fun CreatePage() {
     isUserLoggedIn {
-        HomeScreen()
+        CreateScreen()
     }
 }
 
 @Composable
-fun HomeScreen() {
+fun CreateScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -34,7 +31,7 @@ fun HomeScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .maxWidth(PAGE_WIDTH.px)
+                .maxWidth(Constants.PAGE_WIDTH.px)
         ) {
             SidePanel()
         }

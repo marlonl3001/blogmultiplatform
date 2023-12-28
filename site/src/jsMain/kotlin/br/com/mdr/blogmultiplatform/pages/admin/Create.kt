@@ -33,7 +33,7 @@ fun CreateScreen() {
                 .fillMaxSize()
                 .maxWidth(Constants.PAGE_WIDTH.px)
         ) {
-            SidePanel()
+            SidePanel(onMenuClick = {})
         }
     }
 }

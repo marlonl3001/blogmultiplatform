@@ -4,20 +4,27 @@ import androidx.compose.runtime.Composable
 import br.com.mdr.blogmultiplatform.models.Theme
 import br.com.mdr.blogmultiplatform.navigation.Screen
 import br.com.mdr.blogmultiplatform.styles.NavigationItemStyle
+import br.com.mdr.blogmultiplatform.util.Constants.COLLAPSED_PANEL_HEIGHT
 import br.com.mdr.blogmultiplatform.util.Constants.FONT_FAMILY
 import br.com.mdr.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import br.com.mdr.blogmultiplatform.util.Ids
 import br.com.mdr.blogmultiplatform.util.Res
+import br.com.mdr.blogmultiplatform.util.logout
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.dom.svg.Path
 import com.varabyte.kobweb.compose.dom.svg.Svg
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.height
@@ -32,15 +39,30 @@ import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.icons.fa.FaBars
+import com.varabyte.kobweb.silk.components.icons.fa.FaXmark
+import com.varabyte.kobweb.silk.components.icons.fa.IconSize
+import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.css.Position
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
 
 @Composable
-fun SidePanel() {
-    
+fun SidePanel(onMenuClick: () -> Unit) {
+    val breakpoint = rememberBreakpoint()
+
+    if (breakpoint > Breakpoint.MD) {
+        SidePanelInternal()
+    } else {
+        CollapsedSidePanel(onMenuClick)
+    }
+}
+@Composable
+fun SidePanelInternal() {
     Column(
         Modifier
             .height(100.vh)//VH is Viewport Height, which means that It's the height of the browser window
@@ -61,7 +83,49 @@ fun SidePanel() {
 }
 
 @Composable
-fun NavigationItems() {
+fun OverflowSidePanel(onCloseMenu: () -> Unit) {
+    val breakpoint = rememberBreakpoint()
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.vh)
+            .position(Position.Fixed)
+            .zIndex(9)
+            .backgroundColor(Theme.HalfBlack.rgb)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(if (breakpoint < Breakpoint.MD) 50.percent else 25.percent)
+                .padding(leftRight = 24.px, topBottom = 40.px)
+                .backgroundColor(Theme.Secondary.rgb)
+        ) {
+            Row(
+                modifier = Modifier.margin(bottom = 60.px),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                FaXmark(
+                    modifier = Modifier
+                        .margin(right = 20.px)
+                        .color(Colors.White)
+                        .cursor(Cursor.Pointer)
+                        .onClick { onCloseMenu() },
+                    size = IconSize.LG
+                )
+                Image(
+                    modifier = Modifier.width(80.px),
+                    src = Res.Image.logo,
+                    description = "Image logo"
+                )
+            }
+            NavigationItems()
+        }
+    }
+}
+
+@Composable
+private fun NavigationItems() {
     val context = rememberPageContext()
 
     SpanText(
@@ -100,12 +164,14 @@ fun NavigationItems() {
     NavigationItem(
         title = "Logout",
         icon = Res.PathIcon.logout,
-        onClick = {}
+        onClick = {
+            logout()
+        }
     )
 }
 
 @Composable
-fun NavigationItem(
+private fun NavigationItem(
     modifier: Modifier = Modifier,
     selected: Boolean = false,
     title: String,
@@ -166,5 +232,30 @@ private fun VectorIcon(
             attr(attr = "stroke-linecap", value = "round")
             attr(attr = "stroke-linejoin", value = "round")
         }
+    }
+}
+
+@Composable
+private fun CollapsedSidePanel(onMenuClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(COLLAPSED_PANEL_HEIGHT.px)
+            .padding(leftRight = 24.px)
+            .backgroundColor(Theme.Secondary.rgb),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FaBars(
+            modifier = Modifier
+                .margin(right = 24.px)
+                .color(Colors.White)
+                .cursor(Cursor.Pointer)
+                .onClick { onMenuClick() }
+        )
+        Image(
+            modifier = Modifier.width(80.px),
+            src = Res.Image.logo,
+            description = "Image logo"
+        )
     }
 }

@@ -2,7 +2,6 @@ package br.com.mdr.blogmultiplatform.util
 
 import br.com.mdr.blogmultiplatform.models.User
 import br.com.mdr.blogmultiplatform.models.UserResponse
-import br.com.mdr.blogmultiplatform.utils.Constants.CHECK_USER_API_PATH
 import com.varabyte.kobweb.browser.api
 import kotlinx.browser.window
 import kotlinx.serialization.encodeToString

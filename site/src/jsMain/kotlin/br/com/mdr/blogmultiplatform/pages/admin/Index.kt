@@ -1,14 +1,16 @@
 package br.com.mdr.blogmultiplatform.pages.admin
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import br.com.mdr.blogmultiplatform.components.AdminPageLayout
-import br.com.mdr.blogmultiplatform.models.Joke
+import br.com.mdr.blogmultiplatform.components.LoadingIndicator
+import br.com.mdr.blogmultiplatform.models.RandomJoke
 import br.com.mdr.blogmultiplatform.models.Theme
 import br.com.mdr.blogmultiplatform.navigation.Screen
 import br.com.mdr.blogmultiplatform.util.Constants.FONT_FAMILY
 import br.com.mdr.blogmultiplatform.util.Constants.PAGE_WIDTH
 import br.com.mdr.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import br.com.mdr.blogmultiplatform.util.Res
+import br.com.mdr.blogmultiplatform.util.fetchRandomJoke
 import br.com.mdr.blogmultiplatform.util.isUserLoggedIn
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
@@ -44,18 +46,25 @@ fun HomePage() {
 
 @Composable
 fun HomeScreen() {
+    var randomJoke: RandomJoke? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(Unit) {
+        fetchRandomJoke { randomJoke = it }
+    }
+
     AdminPageLayout {
         HomeContent(
-            joke = Joke(1, "Q:Você sabe porque o país está nesta merda?:Porque um merda de presidente foi " +
-                    "eleito por uma merda de população.")
+            joke = randomJoke//RandomJoke(1, "Q:Você sabe porque o país está nesta merda?:Porque um merda de presidente foi " +
+                    //"eleito por uma merda de população.")
         )
         AddButton()
     }
 }
 
 @Composable
-fun HomeContent(joke: Joke?) {
+fun HomeContent(joke: RandomJoke?) {
     val breakPoint = rememberBreakpoint()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -81,17 +90,17 @@ fun HomeContent(joke: Joke?) {
                         SpanText(
                             modifier = Modifier
                                 .margin(bottom = 14.px)
-                                .fillMaxWidth(60.percent)
+                                .fillMaxWidth(40.percent)
                                 .textAlign(TextAlign.Center)
                                 .color(Theme.Secondary.rgb)
                                 .fontFamily(FONT_FAMILY)
                                 .fontSize(28.px)
                                 .fontWeight(FontWeight.Bold),
-                            text = joke.joke.split(":")[1]
+                            text = joke.joke.split(":")[1].dropLast(1)
                         )
                         SpanText(
                             modifier = Modifier
-                                .fillMaxWidth(60.percent)
+                                .fillMaxWidth(40.percent)
                                 .textAlign(TextAlign.Center)
                                 .color(Theme.HalfBlack.rgb)
                                 .fontFamily(FONT_FAMILY)
@@ -109,13 +118,13 @@ fun HomeContent(joke: Joke?) {
                                 .fontFamily(FONT_FAMILY)
                                 .fontSize(28.px)
                                 .fontWeight(FontWeight.Bold),
-                            text = joke.joke.split(":")[1]
+                            text = joke.joke
                         )
                     }
                 }
             }
         } else {
-            print("loading joke...")
+            LoadingIndicator()
         }
     }
 }

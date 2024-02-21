@@ -9,3 +9,4 @@
 # Tech Blog
 
 ![building](https://github.com/marlonl3001/blogmultiplatform/assets/6325593/2b200f67-d7c4-497d-a0a6-948f29c745da)
+![blogmultiplatform](https://github.com/marlonl3001/blogmultiplatform/assets/6325593/71fb62bc-152b-47b9-b28c-cfb3c195bc0f)

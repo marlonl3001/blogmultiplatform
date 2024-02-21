@@ -1,9 +1,15 @@
 package br.com.mdr.blogmultiplatform.pages.admin
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import br.com.mdr.blogmultiplatform.models.Theme
 import br.com.mdr.blogmultiplatform.models.User
 import br.com.mdr.blogmultiplatform.models.UserResponse
+import br.com.mdr.blogmultiplatform.navigation.Screen
 import br.com.mdr.blogmultiplatform.styles.LoginInputStyle
 import br.com.mdr.blogmultiplatform.util.Constants.FONT_FAMILY
 import br.com.mdr.blogmultiplatform.util.Constants.LOGIN_INPUT_HEIGHT
@@ -14,14 +20,34 @@ import br.com.mdr.blogmultiplatform.util.Constants.SMALL_MARGIN
 import br.com.mdr.blogmultiplatform.util.Ids
 import br.com.mdr.blogmultiplatform.util.Res
 import br.com.mdr.blogmultiplatform.util.checkUserExistence
-import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.FontSize
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.Visibility
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.border
+import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.cursor
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
+import com.varabyte.kobweb.compose.ui.modifiers.fontSize
+import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.id
+import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.textAlign
+import com.varabyte.kobweb.compose.ui.modifiers.visibility
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
@@ -38,13 +64,12 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Input
 import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.get
 import org.w3c.dom.set
 
 @Page
 @Composable
 fun LoginScreen() {
-    var errorText by remember { mutableStateOf("") }
+    var errorText by remember { mutableStateOf(" ") }
     val context = rememberPageContext()
     val scope = rememberCoroutineScope()
 
@@ -127,7 +152,7 @@ fun LoginScreen() {
                             if (userName.isNotEmpty() && password.isNotEmpty()) {
                                 val user = checkUserExistence(
                                     user = User(
-                                        userName = userName,
+                                        username = userName,
                                         password = password
                                     )
                                 )
@@ -137,7 +162,7 @@ fun LoginScreen() {
                                         remember = true,
                                         response = user
                                     )
-                                    context.router.navigateTo("admin/home")
+                                    context.router.navigateTo(Screen.Home.route)
                                 } else {
                                     errorText = "User not found!"
                                     delay(3000)
@@ -159,6 +184,7 @@ fun LoginScreen() {
                     .width(LOGIN_INPUT_WIDTH.px)
                     .color(Colors.Red)
                     .textAlign(TextAlign.Center)
+                    .fontFamily(FONT_FAMILY)
                     .visibility(
                         if (errorText.isEmpty())
                             Visibility.Hidden
@@ -177,7 +203,7 @@ private fun rememberUserLogged(
 ) {
     localStorage["remember"] = remember.toString()
     if (response != null) {
-        localStorage["userId"] = response.id
-        localStorage["userName"] = response.userName
+        localStorage["userId"] = response._id
+        localStorage["username"] = response.username
     }
 }

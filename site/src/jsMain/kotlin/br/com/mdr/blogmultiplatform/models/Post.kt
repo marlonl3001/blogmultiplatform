@@ -1,11 +1,12 @@
 package br.com.mdr.blogmultiplatform.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.bson.codecs.pojo.annotations.BsonId
 
 @Serializable
-data class Post(
-    @BsonId val id: String,
+actual data class Post(
+    @SerialName("_id") //Unique identifier for MongoDB
+    actual val id: String = "",
     actual val author: String,
     actual val date: String,
     actual val title: String,
@@ -13,7 +14,7 @@ data class Post(
     actual val thumbnail: String,
     actual val content: String,
     actual val category: String,
-    val main: Boolean = true,
-    val popular: Boolean = false,
-    val sponsored: Boolean = false
+    actual val popular: Boolean,
+    actual val main: Boolean,
+    actual val sponsored: Boolean
 )

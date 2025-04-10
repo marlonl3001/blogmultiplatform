@@ -14,6 +14,7 @@ import br.com.mdr.blogmultiplatform.util.Constants.FONT_FAMILY
 import br.com.mdr.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import br.com.mdr.blogmultiplatform.util.Ids
 import br.com.mdr.blogmultiplatform.util.isUserLoggedIn
+import br.com.mdr.blogmultiplatform.util.noBorder
 import com.varabyte.kobweb.browser.file.loadDataUrlFromDisk
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
@@ -30,7 +31,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.classNames
 import com.varabyte.kobweb.compose.ui.modifiers.color
@@ -41,7 +41,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
-import com.varabyte.kobweb.compose.ui.modifiers.fontStyle
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.id
@@ -49,7 +48,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.compose.ui.modifiers.outline
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.resize
@@ -69,7 +67,6 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.A
 import org.jetbrains.compose.web.dom.Button
@@ -96,7 +93,7 @@ fun CreateScreen() {
     var sponsoredSwitch by remember { mutableStateOf(false) }
     var imageUrlSwitch by remember { mutableStateOf(true) }
     var editorIsVisible by remember { mutableStateOf(true) }
-    var fileName by remember { mutableStateOf("") }
+    var thumbnail by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(Category.Programming) }
 
     AdminPageLayout {
@@ -185,16 +182,7 @@ fun CreateScreen() {
                             .padding(leftRight = 20.px)
                             .backgroundColor(Theme.LightGray.rgb)
                             .borderRadius(4.px)
-                            .border(
-                                width = 0.px,
-                                style = LineStyle.None,
-                                color = Colors.Transparent
-                            )
-                            .outline(
-                                width = 0.px,
-                                style = LineStyle.None,
-                                color = Colors.Transparent
-                            )
+                            .noBorder()
                             .fontFamily(FONT_FAMILY)
                             .fontSize(16.px)
                             .toAttrs {
@@ -210,16 +198,7 @@ fun CreateScreen() {
                             .padding(leftRight = 20.px)
                             .backgroundColor(Theme.LightGray.rgb)
                             .borderRadius(4.px)
-                            .border(
-                                width = 0.px,
-                                style = LineStyle.None,
-                                color = Colors.Transparent
-                            )
-                            .outline(
-                                width = 0.px,
-                                style = LineStyle.None,
-                                color = Colors.Transparent
-                            )
+                            .noBorder()
                             .fontFamily(FONT_FAMILY)
                             .fontSize(16.px)
                             .toAttrs {
@@ -249,10 +228,10 @@ fun CreateScreen() {
                         )
                     }
                     ThumbnailUploader(
-                        thumbnail = fileName,
+                        thumbnail = thumbnail,
                         thumbnailInputDisabled = imageUrlSwitch,
                         onThumbnailSelect = { filename, file ->
-                            fileName = filename
+                            thumbnail = filename
                             println(filename)
                             println(file)
                         }
@@ -263,27 +242,7 @@ fun CreateScreen() {
                         onPreviewClicked = { editorIsVisible = !editorIsVisible }
                     )
                     Editor(isVisible = editorIsVisible)
-                    Button(
-                        attrs = Modifier
-                            .height(54.px)
-                            .margin(top = 24.px)
-                            .padding(leftRight = 24.px)
-                            .backgroundColor(Theme.Primary.rgb)
-                            .color(Colors.White)
-                            .borderRadius(4.px)
-                            .border(
-                                width = 0.px,
-                                style = LineStyle.None,
-                                color = Colors.Transparent
-                            )
-                            .outline(
-                                width = 0.px,
-                                style = LineStyle.None,
-                                color = Colors.Transparent
-                            )
-                            .onClick {  }
-                            .toAttrs()
-                    )
+                    CreateButton(onClick = {})
                 }
             }
         }
@@ -310,15 +269,7 @@ fun ThumbnailUploader(
                 .padding(20.px)
                 .color(Theme.LightGray.rgb)
                 .borderRadius(r = 4.px)
-                .border(
-                    width = 0.px,
-                    style = LineStyle.None,
-                    color = Colors.Transparent
-                )
-                .outline(
-                    width = 0.px,
-                    style = LineStyle.None,
-                )
+                .noBorder()
                 .fontSize(16.px)
                 .fontFamily(FONT_FAMILY)
                 .thenIf(
@@ -348,15 +299,7 @@ fun ThumbnailUploader(
                     else
                         Colors.White
                 )
-                .border(
-                    width = 0.px,
-                    style = LineStyle.None,
-                    color = Colors.Transparent
-                )
-                .outline(
-                    width = 0.px,
-                    style = LineStyle.None,
-                )
+                .noBorder()
                 .fontSize(14.px)
                 .fontFamily(FONT_FAMILY)
                 .fontWeight(FontWeight.Medium)
@@ -474,16 +417,7 @@ fun EditorControls(
                         .borderRadius(4.px)
                         .backgroundColor(Theme.LightGray.rgb)
                         .color(Theme.DarkGray.rgb)
-                        .border(
-                            width = 0.px,
-                            style = LineStyle.None,
-                            color = Colors.Transparent
-                        )
-                        .outline(
-                            width = 0.px,
-                            style = LineStyle.None,
-                            color = Colors.Transparent
-                        )
+                        .noBorder()
                         .onClick { onPreviewClicked() }
                         .toAttrs()
                 ) {
@@ -554,16 +488,7 @@ fun Editor(isVisible: Boolean) {
                         Colors.White
                 )
                 .borderRadius(r = 4.px)
-                .border(
-                    color = Colors.Transparent,
-                    width = 0.px,
-                    style = LineStyle.None
-                )
-                .outline(
-                    color = Colors.Transparent,
-                    width = 0.px,
-                    style = LineStyle.None
-                )
+                .noBorder()
                 .toAttrs {
                     attr("placeholder", "Tell your story...")
                 }
@@ -579,16 +504,7 @@ fun Editor(isVisible: Boolean) {
             .padding(all = 20.px)
             .backgroundColor(Theme.LightGray.rgb)
             .borderRadius(r = 4.px)
-            .border(
-                color = Colors.Transparent,
-                width = 0.px,
-                style = LineStyle.None
-            )
-            .outline(
-                color = Colors.Transparent,
-                width = 0.px,
-                style = LineStyle.None
-            )
+            .noBorder()
             .visibility(
                 if (isVisible)
                     Visibility.Hidden
@@ -597,6 +513,22 @@ fun Editor(isVisible: Boolean) {
             )
             .overflow(Overflow.Auto)
             .scrollBehavior(ScrollBehavior.Smooth)
+            .toAttrs()
+    )
+}
+
+@Composable
+fun CreateButton(onClick: () -> Unit) {
+    Button(
+        attrs = Modifier
+            .height(54.px)
+            .margin(top = 24.px)
+            .padding(leftRight = 24.px)
+            .backgroundColor(Theme.Primary.rgb)
+            .color(Colors.White)
+            .borderRadius(4.px)
+            .noBorder()
+            .onClick { onClick() }
             .toAttrs()
     )
 }
